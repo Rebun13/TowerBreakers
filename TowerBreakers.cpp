@@ -16,19 +16,27 @@ vector<string> split(const string &);
  *  1. INTEGER n
  *  2. INTEGER m
  */
-
-int towerBreakers(int n, int m) {
+int towerBreakersAlt(int n, int m) {
     vector<int> towers(n, m);
     bool moreMovesAvailable = true;
     int currentPlayer = 0;
     while(moreMovesAvailable) {
         moreMovesAvailable = !moreMovesAvailable;
+        int heightNotOneCounter = 0;
+        for(int i = 0; i < n; i++) {
+            if(towers.at(i) != 1) {
+                heightNotOneCounter++;
+            }
+        }
+        if(heightNotOneCounter == 1) {
+            return currentPlayer + 1;
+        }
         for(int i = 0; i < n; i++) { // Iteration over towers
-            for(int j = 2; j <= m; j++) { // Iteration over multipliers
-                if(towers[i] % j == 0) {
+            for(int j = i/2; j >= 1; j--) { // Iteration over multipliers
+                if(towers.at(i) % j == 0) {
                     moreMovesAvailable = !moreMovesAvailable;
-                    towers[i] = towers[i] / j;
-                    cout << "[" << currentPlayer + 1 << "] T" << i << " - " << towers[i] << endl;
+                    towers.at(i) = towers.at(i) - j;
+                    cout << "[" << currentPlayer + 1 << "] T" << i << " - " << towers.at(i) << endl;
                     break;
                 }
             }
@@ -39,6 +47,12 @@ int towerBreakers(int n, int m) {
         }
     }
     return !currentPlayer + 1;
+}
+
+int towerBreakers(int n, int m) {
+    if (m == 1) return 2;
+    if (n == 1) return 1;
+    return n % 2 == 0 ? 2 : 1;
 }
 
 int main()
